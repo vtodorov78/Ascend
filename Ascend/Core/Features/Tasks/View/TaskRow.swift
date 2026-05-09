@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct TaskRow: View {
+    
+    let toDoTask: ToDoTask
+    
     var body: some View {
         HStack(spacing: 16) {
            
@@ -16,7 +19,7 @@ struct TaskRow: View {
                 .foregroundStyle(.accentLight)
         
            VStack(alignment: .leading, spacing: 10) {
-               Text("Walk the Dog")
+               Text(toDoTask.title)
                    .font(.headline)
                    .foregroundStyle(.textPrimary)
                
@@ -24,22 +27,22 @@ struct TaskRow: View {
                    Image(systemName: "clock.fill")
                        .foregroundStyle(.textSecondary)
                    
-                   Text("From 16:00-16:30")
+                   Text(toDoTask.time, style: .time)
                        .font(.subheadline)
                        .foregroundStyle(.textSecondary)
                }
            }
            
            Spacer()
-           
-           Image(systemName: "checkmark.circle")
-               .resizable()
-               .frame(width: 40, height: 40)
-               .foregroundStyle(.accentLight)
-       }
+            
+            Image(systemName: "circle")
+                .resizable()
+                .frame(width: 42, height: 42)
+                .foregroundStyle(.accentLight)
+        }
     }
 }
 
 #Preview {
-    TaskRow()
+    TaskRow(toDoTask: ToDoTask(title: "iOS coding", time: .now))
 }

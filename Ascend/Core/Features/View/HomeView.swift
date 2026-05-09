@@ -10,6 +10,14 @@ import SwiftUI
 struct HomeView: View {
     @State private var searchText = ""
     
+    @State private var tasks: [ToDoTask] = [
+        ToDoTask(title: "Morning routine", time: .now),
+        ToDoTask(title: "iOS Coding", time: .now),
+        ToDoTask(title: "Security study", time: .now),
+        ToDoTask(title: "Workout", time: .now),
+        ToDoTask(title: "Read 15 pages", time: .now)
+    ]
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -23,7 +31,7 @@ struct HomeView: View {
                     
                     Spacer()
                     
-                    Text("10")
+                    Text("\(tasks.count)")
                         .font(.title3)
                         .fontWeight(.semibold)
                         .frame(width: 38, height: 38)
@@ -36,7 +44,14 @@ struct HomeView: View {
                 .padding(.horizontal)
                 .padding(.top)
                 
-                TasksList()
+                List {
+                    ForEach(tasks) { task in
+                        TaskRow(toDoTask: task)
+                    }
+                    .listRowBackground(Color("surfaceCard"))
+                }
+                .listRowSpacing(20)
+                .scrollContentBackground(.hidden)
                 
             }
             .background(.backgroundPrimary)

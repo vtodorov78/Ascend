@@ -19,8 +19,6 @@ struct MainTabBar: View {
             Tab("Home", systemImage: "house", value: TabIdentifier.home) {
                 HomeView()
             }
-            
-            
         }
         .tint(.accentLight)
     }
