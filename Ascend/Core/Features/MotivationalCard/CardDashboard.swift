@@ -12,7 +12,7 @@ struct CardDashboard: View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
                 .frame(width: 340,height: 200)
-                .foregroundStyle(.surfaceCard)
+                .foregroundStyle(.surfaceElevated)
             
             
             VStack(alignment: .leading, spacing: 16) {

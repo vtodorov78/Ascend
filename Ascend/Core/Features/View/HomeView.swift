@@ -10,6 +10,8 @@ import SwiftUI
 struct HomeView: View {
     @State private var searchText = ""
     
+    @State private var showingAdd = false
+    
     @State private var tasks: [ToDoTask] = [
         ToDoTask(title: "Morning routine", time: .now),
         ToDoTask(title: "iOS Coding", time: .now),
@@ -48,19 +50,27 @@ struct HomeView: View {
                     ForEach(tasks) { task in
                         TaskRow(toDoTask: task)
                     }
-                    .listRowBackground(Color("surfaceCard"))
+                    .listRowBackground(Color("surfaceElevated"))
                 }
                 .listRowSpacing(20)
                 .scrollContentBackground(.hidden)
                 
             }
             .background(.backgroundPrimary)
+            .sheet(isPresented: $showingAdd, content: {
+                AddNewTaskView()
+                    .padding(.top, 25)
+                    .padding(.horizontal, 8)
+                    .presentationDetents([.height(310)])
+                    .presentationCornerRadius(30)
+                    .presentationBackground(.surfaceCard)
+            })
             .navigationBarTitle("Ascend")
             .searchable(text: $searchText, placement: .navigationBarDrawer)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        
+                        showingAdd = true
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .foregroundStyle(.accentLight)

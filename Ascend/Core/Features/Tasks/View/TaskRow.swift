@@ -40,6 +40,7 @@ struct TaskRow: View {
                 .frame(width: 42, height: 42)
                 .foregroundStyle(.accentLight)
         }
+        .background(.surfaceElevated)
     }
 }
 
