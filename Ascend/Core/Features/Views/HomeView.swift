@@ -11,13 +11,7 @@ struct HomeView: View {
     @State private var searchText = ""
     @State private var showingAdd = false
     
-    @State private var tasks: [ToDoTask] = [
-        ToDoTask(title: "Morning routine", time: .now),
-        ToDoTask(title: "iOS Coding", time: .now),
-        ToDoTask(title: "Security study", time: .now),
-        ToDoTask(title: "Workout", time: .now),
-        ToDoTask(title: "Read 15 pages", time: .now)
-    ]
+    @State private var viewModel = TasksViewModel()
     
     var body: some View {
         NavigationStack {
@@ -32,7 +26,7 @@ struct HomeView: View {
                     
                     Spacer()
                     
-                    Text("\(tasks.count)")
+                    Text("\(viewModel.tasks.count)")
                         .font(.title3)
                         .fontWeight(.semibold)
                         .frame(width: 38, height: 38)
@@ -46,7 +40,7 @@ struct HomeView: View {
                 .padding(.top)
                 
                 List {
-                    ForEach(tasks) { task in
+                    ForEach(viewModel.tasks) { task in
                         TaskRow(toDoTask: task)
                     }
                     .listRowBackground(Color("surfaceElevated"))
