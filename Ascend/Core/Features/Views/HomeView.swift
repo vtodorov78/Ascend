@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var searchText = ""
-    
     @State private var showingAdd = false
     
     @State private var tasks: [ToDoTask] = [
@@ -61,7 +60,7 @@ struct HomeView: View {
                 AddNewTaskView()
                     .padding(.top, 25)
                     .padding(.horizontal, 8)
-                    .presentationDetents([.height(310)])
+                    .presentationDetents([.medium])
                     .presentationCornerRadius(30)
                     .presentationBackground(.surfaceCard)
             })
@@ -72,7 +71,7 @@ struct HomeView: View {
                     Button {
                         showingAdd = true
                     } label: {
-                        Image(systemName: "plus.circle.fill")
+                        Image(systemName: "plus")
                             .foregroundStyle(.accentLight)
                     }
                 }
