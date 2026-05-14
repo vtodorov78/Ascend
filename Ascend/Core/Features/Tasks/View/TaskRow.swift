@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TaskRow: View {
     
-    let toDoTask: ToDoTask
+    @Binding var toDoTask: ToDoTask
     
     var body: some View {
         HStack(spacing: 16) {
@@ -22,6 +22,7 @@ struct TaskRow: View {
                Text(toDoTask.title)
                    .font(.headline)
                    .foregroundStyle(.textPrimary)
+                   .strikethrough(toDoTask.isCompleted)
                
                HStack {
                    Image(systemName: "clock.fill")
@@ -30,20 +31,26 @@ struct TaskRow: View {
                    Text(toDoTask.time, style: .time)
                        .font(.subheadline)
                        .foregroundStyle(.textSecondary)
+                       .strikethrough(toDoTask.isCompleted)
                }
            }
            
            Spacer()
             
-            Image(systemName: "circle")
-                .resizable()
-                .frame(width: 42, height: 42)
-                .foregroundStyle(.accentLight)
+            Button {
+                toDoTask.isCompleted.toggle()
+            } label: {
+                Image(systemName: toDoTask.isCompleted ? "checkmark.circle.fill" : "circle")
+                    .resizable()
+                    .frame(width: 42, height: 42)
+                    .foregroundStyle(.accentLight)
+            }
+            .buttonStyle(.plain)
         }
         .background(.surfaceElevated)
     }
 }
 
 #Preview {
-    TaskRow(toDoTask: ToDoTask(title: "iOS coding", time: .now))
+    TaskRow(toDoTask: .constant(ToDoTask(title: "iOS coding", time: .now)))
 }

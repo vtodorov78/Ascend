@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddNewTaskView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(TasksViewModel.self) private var viewModel
     
     @State private var taskTitle: String = ""
     @State private var taskTime: Date = .init()
@@ -45,6 +46,7 @@ struct AddNewTaskView: View {
                 Spacer()
                 
                 Button() {
+                    addTodoTask()
                     dismiss()
                 } label: {
                     Text("Create Task")
@@ -74,6 +76,15 @@ struct AddNewTaskView: View {
     }
 }
 
+private extension AddNewTaskView {
+    func addTodoTask() {
+       let toDoTask = ToDoTask(title: taskTitle, time: taskTime)
+        
+        viewModel.addTask(toDoTask)
+    }
+}
+
 #Preview {
     AddNewTaskView()
+        .environment(TasksViewModel())
 }

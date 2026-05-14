@@ -11,6 +11,10 @@ import Foundation
 class TasksViewModel {
     var tasks = [ToDoTask]()
     
+    var remainingTasksCount: Int {
+        tasks.filter { !$0.isCompleted }.count
+    }
+    
     init() {
         fetchTasks()
     }
@@ -22,5 +26,9 @@ class TasksViewModel {
             .init(title: "MMA Workout", time: .now),
             .init(title: "Reading", time: .now)
         ]
+    }
+    
+    func addTask(_ task: ToDoTask) {
+        tasks.append(task)
     }
 }

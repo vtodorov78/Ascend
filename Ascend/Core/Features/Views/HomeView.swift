@@ -26,7 +26,7 @@ struct HomeView: View {
                     
                     Spacer()
                     
-                    Text("\(viewModel.tasks.count)")
+                    Text("\(viewModel.remainingTasksCount)")
                         .font(.title3)
                         .fontWeight(.semibold)
                         .frame(width: 38, height: 38)
@@ -40,7 +40,7 @@ struct HomeView: View {
                 .padding(.top)
                 
                 List {
-                    ForEach(viewModel.tasks) { task in
+                    ForEach($viewModel.tasks) { task in
                         TaskRow(toDoTask: task)
                     }
                     .listRowBackground(Color("surfaceElevated"))
@@ -52,6 +52,7 @@ struct HomeView: View {
             .background(.backgroundPrimary)
             .sheet(isPresented: $showingAdd, content: {
                 AddNewTaskView()
+                    .environment(viewModel)
                     .padding(.top, 25)
                     .padding(.horizontal, 8)
                     .presentationDetents([.medium])
