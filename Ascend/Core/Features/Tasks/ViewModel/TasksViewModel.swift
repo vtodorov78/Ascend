@@ -31,4 +31,9 @@ class TasksViewModel {
     func addTask(_ task: ToDoTask) {
         tasks.append(task)
     }
+    
+    func deleteTask(_ task: ToDoTask) {
+        guard let index = tasks.firstIndex(where: { $0.id == task.id }) else { return }
+        tasks.remove(at: index)
+    }
 }

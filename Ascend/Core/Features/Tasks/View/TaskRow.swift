@@ -22,7 +22,7 @@ struct TaskRow: View {
                Text(toDoTask.title)
                    .font(.headline)
                    .foregroundStyle(.textPrimary)
-                   .strikethrough(toDoTask.isCompleted)
+                   .strikethrough(toDoTask.isCompleted, pattern: .solid)
                
                HStack {
                    Image(systemName: "clock.fill")
@@ -31,14 +31,16 @@ struct TaskRow: View {
                    Text(toDoTask.time, style: .time)
                        .font(.subheadline)
                        .foregroundStyle(.textSecondary)
-                       .strikethrough(toDoTask.isCompleted)
+                       .strikethrough(toDoTask.isCompleted, pattern: .solid)
                }
            }
            
            Spacer()
             
             Button {
-                toDoTask.isCompleted.toggle()
+                withAnimation {
+                    toDoTask.isCompleted.toggle()
+                }
             } label: {
                 Image(systemName: toDoTask.isCompleted ? "checkmark.circle.fill" : "circle")
                     .resizable()
