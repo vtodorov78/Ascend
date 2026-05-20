@@ -6,10 +6,18 @@
 //
 
 import Foundation
+import SwiftData
 
-struct ToDoTask: Identifiable {
-    let id: String = UUID().uuidString
-    let title: String
-    let time: Date
-    var isCompleted: Bool = false
+@Model
+final class ToDoTask {
+    var id: String = UUID().uuidString
+    var title: String
+    var time: Date
+    var isCompleted: Bool
+    
+    init(title: String, time: Date, isCompleted: Bool = false) {
+        self.title = title
+        self.time = time
+        self.isCompleted = isCompleted
+    }
 }

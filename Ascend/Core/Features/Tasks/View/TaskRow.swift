@@ -8,34 +8,33 @@
 import SwiftUI
 
 struct TaskRow: View {
-    
-    @Binding var toDoTask: ToDoTask
+    let toDoTask: ToDoTask
     
     var body: some View {
         HStack(spacing: 16) {
-           
-           RoundedRectangle(cornerRadius: 16)
+            
+            RoundedRectangle(cornerRadius: 16)
                 .frame(width: 3.6, height: 48)
                 .foregroundStyle(.accentLight)
-        
-           VStack(alignment: .leading, spacing: 10) {
-               Text(toDoTask.title)
-                   .font(.headline)
-                   .foregroundStyle(.textPrimary)
-                   .strikethrough(toDoTask.isCompleted, pattern: .solid)
-               
-               HStack {
-                   Image(systemName: "clock.fill")
-                       .foregroundStyle(.textSecondary)
-                   
-                   Text(toDoTask.time, style: .time)
-                       .font(.subheadline)
-                       .foregroundStyle(.textSecondary)
-                       .strikethrough(toDoTask.isCompleted, pattern: .solid)
-               }
-           }
-           
-           Spacer()
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text(toDoTask.title)
+                    .font(.headline)
+                    .foregroundStyle(.textPrimary)
+                    .strikethrough(toDoTask.isCompleted, pattern: .solid)
+                
+                HStack {
+                    Image(systemName: "clock.fill")
+                        .foregroundStyle(.textSecondary)
+                    
+                    Text(toDoTask.time, style: .time)
+                        .font(.subheadline)
+                        .foregroundStyle(.textSecondary)
+                        .strikethrough(toDoTask.isCompleted, pattern: .solid)
+                }
+            }
+            
+            Spacer()
             
             Button {
                 withAnimation {
@@ -54,5 +53,5 @@ struct TaskRow: View {
 }
 
 #Preview {
-    TaskRow(toDoTask: .constant(ToDoTask(title: "iOS coding", time: .now)))
+    TaskRow(toDoTask: ToDoTask(title: "iOS coding", time: .now, isCompleted: false))
 }

@@ -6,12 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
     @State private var searchText = ""
     @State private var showingAdd = false
     
-    @State private var viewModel = TasksViewModel()
+    @Environment(\.modelContext) private var context
+    
+    @Query(sort: \ToDoTask.time, order: .forward) private var tasks: [ToDoTask]
+    
+    var remainingTasksCount: Int {
+        tasks.filter { !$0.isCompleted }.count
+    }
     
     var body: some View {
         NavigationStack {
@@ -26,7 +33,7 @@ struct HomeView: View {
                     
                     Spacer()
                     
-                    Text("\(viewModel.remainingTasksCount)")
+                    Text("\(remainingTasksCount)")
                         .font(.title3)
                         .fontWeight(.semibold)
                         .frame(width: 38, height: 38)
@@ -40,32 +47,33 @@ struct HomeView: View {
                 .padding(.top)
                 
                 List {
-                    ForEach($viewModel.tasks) { $task in
-                        TaskRow(toDoTask: $task)
-                               .contextMenu {
-                                   Button(role: .destructive) {
-                                       withAnimation {
-                                           viewModel.deleteTask(task)
-                                       }
-                                   } label: {
-                                       Label("Delete", systemImage: "trash")
-                                           .tint(.red)
-                                   }
-                               } preview: {
-                                   TaskRow(toDoTask: .constant(task))
-                                       .frame(width: 340)
-                                       .padding()
-                                       .background(.surfaceElevated)
-                                       .clipShape(RoundedRectangle(cornerRadius: 20))
-                               }
+                    ForEach(tasks) { task in
+                        TaskRow(toDoTask: task)
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    withAnimation {
+                                        deleteToDoTask(task)
+                                    }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                        .tint(.red)
+                                }
+                            } preview: {
+                                TaskRow(toDoTask: task)
+                                    .frame(width: 340)
+                                    .padding()
+                                    .background(.surfaceElevated)
+                                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                            }
                             .swipeActions {
                                 Button(role: .destructive) {
                                     withAnimation {
-                                        viewModel.deleteTask(task)
+                                        deleteToDoTask(task)
                                     }
                                 } label: {
                                     Image(systemName: "trash")
                                 }
+                                .tint(.red)
                             }
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color("surfaceElevated"))
@@ -78,7 +86,6 @@ struct HomeView: View {
             .background(.backgroundPrimary)
             .sheet(isPresented: $showingAdd, content: {
                 AddNewTaskView()
-                    .environment(viewModel)
                     .padding(.top, 25)
                     .padding(.horizontal, 8)
                     .presentationDetents([.medium])
@@ -98,6 +105,12 @@ struct HomeView: View {
                 }
             }
         }
+    }
+}
+
+extension HomeView {
+    func deleteToDoTask(_ task: ToDoTask) {
+        context.delete(task)
     }
 }
 

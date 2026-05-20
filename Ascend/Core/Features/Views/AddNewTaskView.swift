@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddNewTaskView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(TasksViewModel.self) private var viewModel
+    @Environment(\.modelContext) private var context
     
     @State private var taskTitle: String = ""
     @State private var taskTime: Date = .init()
@@ -47,7 +48,6 @@ struct AddNewTaskView: View {
                 
                 Button() {
                     addTodoTask()
-                    dismiss()
                 } label: {
                     Text("Create Task")
                         .font(.title3)
@@ -78,13 +78,14 @@ struct AddNewTaskView: View {
 
 private extension AddNewTaskView {
     func addTodoTask() {
-       let toDoTask = ToDoTask(title: taskTitle, time: taskTime)
+        let toDoTask = ToDoTask(title: taskTitle, time: taskTime, isCompleted: false)
         
-        viewModel.addTask(toDoTask)
+        context.insert(toDoTask)
+        dismiss()
     }
 }
 
 #Preview {
     AddNewTaskView()
-        .environment(TasksViewModel())
+    
 }
