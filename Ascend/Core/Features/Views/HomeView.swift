@@ -33,6 +33,15 @@ struct HomeView: View {
                         ForEach(filteredTasks) { task in
                             TaskRow(toDoTask: task)
                                 .contextMenu {
+                                    Button {
+                                        withAnimation {
+                                            task.isCompleted.toggle()
+                                        }
+                                    } label: {
+                                        Label(task.isCompleted ? "Mark as incomplete" : "Complete", systemImage: task.isCompleted ? "circle" : "checkmark.circle")
+                                            .tint(task.isCompleted ? .accentLight : .green)
+                                    }
+                                    
                                     Button(role: .destructive) {
                                         withAnimation {
                                             deleteToDoTask(task)
@@ -41,12 +50,6 @@ struct HomeView: View {
                                         Label("Delete", systemImage: "trash")
                                             .tint(.red)
                                     }
-                                } preview: {
-                                    TaskRow(toDoTask: task)
-                                        .frame(width: 340)
-                                        .padding()
-                                        .background(.surfaceElevated)
-                                        .clipShape(RoundedRectangle(cornerRadius: 20))
                                 }
                                 .swipeActions {
                                     Button(role: .destructive) {
@@ -64,7 +67,7 @@ struct HomeView: View {
                     } header: {
                         HStack {
                             Text("Today's tasks")
-                                .font(.title3)
+                                .font(.headline)
                                 .fontWeight(.semibold)
                                 .foregroundStyle(.textPrimary)
                             
@@ -76,9 +79,9 @@ struct HomeView: View {
                                 .frame(width: 38, height: 38)
                                 .overlay {
                                     RoundedRectangle(cornerRadius: 10)
-                                        .stroke(.accentLight, lineWidth: 3)
+                                        .stroke(remainingTasksCount > 0 ? .red : .green, lineWidth: 3)
                                 }
-                                .foregroundStyle(.accentLight)
+                                .foregroundStyle(remainingTasksCount > 0 ? .red : .green)
                         }
                         .padding(.bottom)
                     }
