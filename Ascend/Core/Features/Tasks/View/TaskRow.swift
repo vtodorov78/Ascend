@@ -48,7 +48,9 @@ struct TaskRow: View {
             }
             .buttonStyle(.plain)
         }
-        .background(.surfaceElevated)
+        .background(RoundedRectangle(cornerRadius: 25)
+            .fill(.surfaceElevated))
+        
     }
 }
 

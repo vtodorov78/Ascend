@@ -20,69 +20,75 @@ struct HomeView: View {
         tasks.filter { !$0.isCompleted }.count
     }
     
+    var filteredTasks: [ToDoTask] {
+        guard !searchText.isEmpty else { return tasks }
+        return tasks.filter { $0.title.localizedCaseInsensitiveContains(searchText)}
+    }
+    
     var body: some View {
         NavigationStack {
             VStack {
-                StreakSliderView()
-                
-                HStack {
-                    Text("Today's tasks")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.textPrimary)
-                    
-                    Spacer()
-                    
-                    Text("\(remainingTasksCount)")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .frame(width: 38, height: 38)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(.accentLight, lineWidth: 3)
-                        }
-                        .foregroundStyle(.accentLight)
-                }
-                .padding(.horizontal)
-                .padding(.top)
-                
                 List {
-                    ForEach(tasks) { task in
-                        TaskRow(toDoTask: task)
-                            .contextMenu {
-                                Button(role: .destructive) {
-                                    withAnimation {
-                                        deleteToDoTask(task)
+                    Section {
+                        ForEach(filteredTasks) { task in
+                            TaskRow(toDoTask: task)
+                                .contextMenu {
+                                    Button(role: .destructive) {
+                                        withAnimation {
+                                            deleteToDoTask(task)
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                            .tint(.red)
                                     }
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                        .tint(.red)
+                                } preview: {
+                                    TaskRow(toDoTask: task)
+                                        .frame(width: 340)
+                                        .padding()
+                                        .background(.surfaceElevated)
+                                        .clipShape(RoundedRectangle(cornerRadius: 20))
                                 }
-                            } preview: {
-                                TaskRow(toDoTask: task)
-                                    .frame(width: 340)
-                                    .padding()
-                                    .background(.surfaceElevated)
-                                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                            }
-                            .swipeActions {
-                                Button(role: .destructive) {
-                                    withAnimation {
-                                        deleteToDoTask(task)
+                                .swipeActions {
+                                    Button(role: .destructive) {
+                                        withAnimation {
+                                            deleteToDoTask(task)
+                                        }
+                                    } label: {
+                                        Image(systemName: "trash")
                                     }
-                                } label: {
-                                    Image(systemName: "trash")
+                                    .tint(.red)
                                 }
-                                .tint(.red)
-                            }
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(Color("surfaceElevated"))
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color("surfaceElevated"))
+                        }
+                    } header: {
+                        HStack {
+                            Text("Today's tasks")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.textPrimary)
+                            
+                            Spacer()
+                            
+                            Text("\(remainingTasksCount)")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .frame(width: 38, height: 38)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(.accentLight, lineWidth: 3)
+                                }
+                                .foregroundStyle(.accentLight)
+                        }
+                        .padding(.bottom)
                     }
                 }
                 .listRowSpacing(20)
                 .scrollContentBackground(.hidden)
-                
+                .scrollDismissesKeyboard(.immediately)
+                .searchable(text: $searchText, placement: .navigationBarDrawer)
             }
+            .navigationTitle("Ascend")
             .background(.backgroundPrimary)
             .sheet(isPresented: $showingAdd, content: {
                 AddNewTaskView()
@@ -92,8 +98,6 @@ struct HomeView: View {
                     .presentationCornerRadius(30)
                     .presentationBackground(.surfaceCard)
             })
-            .navigationBarTitle("Ascend")
-            .searchable(text: $searchText, placement: .navigationBarDrawer)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
