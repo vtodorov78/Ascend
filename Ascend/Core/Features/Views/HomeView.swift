@@ -11,6 +11,7 @@ import SwiftData
 struct HomeView: View {
     @State private var searchText = ""
     @State private var showingAdd = false
+    @State private var taskToEdit: ToDoTask?
     
     @Environment(\.modelContext) private var context
     
@@ -39,7 +40,16 @@ struct HomeView: View {
                                         }
                                     } label: {
                                         Label(task.isCompleted ? "Mark as incomplete" : "Complete", systemImage: task.isCompleted ? "circle" : "checkmark.circle")
-                                            .tint(task.isCompleted ? .accentLight : .green)
+                                            .tint(.green)
+                                    }
+                                    
+                                    Button {
+                                        withAnimation {
+                                            taskToEdit = task
+                                        }
+                                    } label: {
+                                        Label("Edit", systemImage: "pencil")
+                                            .tint(.accentLight)
                                     }
                                     
                                     Button(role: .destructive) {
@@ -101,6 +111,14 @@ struct HomeView: View {
                     .presentationCornerRadius(30)
                     .presentationBackground(.surfaceCard)
             })
+            .sheet(item: $taskToEdit) { task in
+                EditTaskView(toDoTask: task)
+                    .padding(.top, 25)
+                    .padding(.horizontal, 8)
+                    .presentationDetents([.medium])
+                    .presentationCornerRadius(30)
+                    .presentationBackground(.surfaceCard)
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

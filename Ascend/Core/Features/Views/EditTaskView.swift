@@ -1,19 +1,18 @@
 //
-//  AddNewTaskView.swift
+//  EditTaskView.swift
 //  Ascend
 //
-//  Created by Vladimir Todorov on 11.05.26.
+//  Created by Vladimir Todorov on 22.05.26.
 //
 
 import SwiftUI
 import SwiftData
 
-struct AddNewTaskView: View {
+struct EditTaskView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
-    @State private var taskTitle: String = ""
-    @State private var taskTime: Date = .init()
+    @Bindable var toDoTask: ToDoTask
     
     var body: some View {
         NavigationStack {
@@ -24,7 +23,7 @@ struct AddNewTaskView: View {
                         .foregroundStyle(.textSecondary)
                         .padding(.leading, 5)
                     
-                    TextField("Enter a task title..", text: $taskTitle)
+                    TextField("Enter a task title..", text: $toDoTask.title)
                         .padding(15)
                         .background(.surfaceElevated)
                         .clipShape(.rect(cornerRadius: 10))
@@ -37,7 +36,7 @@ struct AddNewTaskView: View {
                         .padding(.leading, 5)
                     
                     
-                    DatePicker("", selection: $taskTime)
+                    DatePicker("", selection: $toDoTask.time)
                         .datePickerStyle(.compact)
                         .padding(15)
                         .tint(.accentLight)
@@ -46,12 +45,10 @@ struct AddNewTaskView: View {
                 
                 Spacer()
                 
-                Button() {
-                    withAnimation {
-                        addTodoTask()
-                    }
+                Button {
+                    dismiss()
                 } label: {
-                    Text("Create Task")
+                    Text("Update Task")
                         .font(.title3)
                         .fontWeight(.semibold)
                         .foregroundStyle(.textPrimary)
@@ -60,9 +57,9 @@ struct AddNewTaskView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.accentLight)
-                .disabled(taskTitle == "")
-                .opacity(taskTitle == "" ? 0.5 : 1)
-                .navigationTitle("New Task")
+                .disabled(toDoTask.title == "")
+                .opacity(toDoTask.title == "" ? 0.5 : 1)
+                .navigationTitle("Edit Task")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
@@ -78,15 +75,6 @@ struct AddNewTaskView: View {
     }
 }
 
-private extension AddNewTaskView {
-    func addTodoTask() {
-        let toDoTask = ToDoTask(title: taskTitle, time: taskTime, isCompleted: false)
-        
-        context.insert(toDoTask)
-        dismiss()
-    }
-}
-
 #Preview {
-    AddNewTaskView()
+    EditTaskView(toDoTask: ToDoTask(title: "Code", time: .now))
 }
