@@ -100,6 +100,13 @@ struct HomeView: View {
                 .scrollContentBackground(.hidden)
                 .scrollDismissesKeyboard(.immediately)
                 .searchable(text: $searchText, placement: .navigationBarDrawer)
+                .overlay {
+                    if tasks.isEmpty {
+                        ContentUnavailableView("No tasks yet", systemImage: "checklist", description: Text("Tap the plus button to add your first task."))
+                    } else if filteredTasks.isEmpty {
+                        ContentUnavailableView.search(text: searchText)
+                    }
+                }
             }
             .navigationTitle("Ascend")
             .background(.backgroundPrimary)
