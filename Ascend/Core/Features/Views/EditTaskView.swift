@@ -12,7 +12,20 @@ struct EditTaskView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
-    @Bindable var toDoTask: ToDoTask
+    let toDoTask: ToDoTask
+    
+    @State private var editedTitle: String
+    @State private var editedTime: Date
+    
+    init(toDoTask: ToDoTask) {
+        self.toDoTask = toDoTask
+        _editedTitle = State(initialValue: toDoTask.title)
+        _editedTime = State(initialValue: toDoTask.time)
+    }
+    
+    private var canCreateTask: Bool {
+        !toDoTask.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
     
     var body: some View {
         NavigationStack {
@@ -23,7 +36,9 @@ struct EditTaskView: View {
                         .foregroundStyle(.textSecondary)
                         .padding(.leading, 5)
                     
-                    TextField("Enter a task title..", text: $toDoTask.title)
+                    TextField("Enter a task title..", text: $editedTitle)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.sentences)
                         .padding(15)
                         .background(.surfaceElevated)
                         .clipShape(.rect(cornerRadius: 10))
@@ -36,7 +51,7 @@ struct EditTaskView: View {
                         .padding(.leading, 5)
                     
                     
-                    DatePicker("", selection: $toDoTask.time)
+                    DatePicker("", selection: $editedTime, in: min(toDoTask.time, Date())..., displayedComponents: [.date, .hourAndMinute])
                         .datePickerStyle(.compact)
                         .padding(15)
                         .tint(.accentLight)
@@ -46,7 +61,7 @@ struct EditTaskView: View {
                 Spacer()
                 
                 Button {
-                    dismiss()
+                    updateTask()
                 } label: {
                     Text("Update Task")
                         .font(.title3)
@@ -57,8 +72,8 @@ struct EditTaskView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.accentLight)
-                .disabled(toDoTask.title == "")
-                .opacity(toDoTask.title == "" ? 0.5 : 1)
+                .disabled(!canCreateTask)
+                .opacity(canCreateTask ? 1 : 0.5)
                 .navigationTitle("Edit Task")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -72,6 +87,19 @@ struct EditTaskView: View {
             }
             .padding()
         }
+    }
+}
+
+extension EditTaskView {
+    func updateTask() {
+        let trimmedTitle = editedTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !trimmedTitle.isEmpty else { return }
+        
+        toDoTask.title = trimmedTitle
+        toDoTask.time = editedTime
+        
+        dismiss()
     }
 }
 

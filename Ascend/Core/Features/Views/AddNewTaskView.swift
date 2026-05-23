@@ -15,6 +15,10 @@ struct AddNewTaskView: View {
     @State private var taskTitle: String = ""
     @State private var taskTime: Date = .init()
     
+    private var canCreateTask: Bool {
+        !taskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 22) {
@@ -25,6 +29,8 @@ struct AddNewTaskView: View {
                         .padding(.leading, 5)
                     
                     TextField("Enter a task title..", text: $taskTitle)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.sentences)
                         .padding(15)
                         .background(.surfaceElevated)
                         .clipShape(.rect(cornerRadius: 10))
@@ -37,7 +43,7 @@ struct AddNewTaskView: View {
                         .padding(.leading, 5)
                     
                     
-                    DatePicker("", selection: $taskTime)
+                    DatePicker("", selection: $taskTime, in: Date()..., displayedComponents: [.date, .hourAndMinute])
                         .datePickerStyle(.compact)
                         .padding(15)
                         .tint(.accentLight)
@@ -60,8 +66,8 @@ struct AddNewTaskView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.accentLight)
-                .disabled(taskTitle == "")
-                .opacity(taskTitle == "" ? 0.5 : 1)
+                .disabled(!canCreateTask)
+                .opacity(canCreateTask ? 1 : 0.5)
                 .navigationTitle("New Task")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -80,7 +86,11 @@ struct AddNewTaskView: View {
 
 private extension AddNewTaskView {
     func addTodoTask() {
-        let toDoTask = ToDoTask(title: taskTitle, time: taskTime, isCompleted: false)
+        let trimmedTitle = taskTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !trimmedTitle.isEmpty else { return }
+        
+        let toDoTask = ToDoTask(title: trimmedTitle, time: taskTime, isCompleted: false)
         
         context.insert(toDoTask)
         dismiss()
