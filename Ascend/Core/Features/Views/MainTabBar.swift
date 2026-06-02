@@ -9,6 +9,7 @@ import SwiftUI
 
 enum TabIdentifier: Hashable {
     case home
+    case calendar
 }
 
 struct MainTabBar: View {
@@ -18,6 +19,10 @@ struct MainTabBar: View {
         TabView(selection: $selectedTab) {
             Tab("Home", systemImage: "house", value: TabIdentifier.home) {
                 HomeView()
+            }
+            
+            Tab("Calendar", systemImage: "calendar.badge.checkmark", value: TabIdentifier.calendar) {
+                CalendarView()
             }
         }
         .tint(.accentLight)
