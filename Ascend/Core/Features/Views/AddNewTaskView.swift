@@ -85,7 +85,7 @@ struct AddNewTaskView: View {
 }
 
 private extension AddNewTaskView {
-    func addTodoTask() {
+    private func addTodoTask() {
         let trimmedTitle = taskTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard !trimmedTitle.isEmpty else { return }

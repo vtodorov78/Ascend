@@ -91,7 +91,7 @@ struct EditTaskView: View {
 }
 
 extension EditTaskView {
-    func updateTask() {
+    private func updateTask() {
         let trimmedTitle = editedTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard !trimmedTitle.isEmpty else { return }
